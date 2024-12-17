@@ -15,8 +15,8 @@ bins.forEach(bin => {
 });
 
 // Select the audio elements for the sound effects
-const correctSound = new Audio('sounds/ding.mp3');
-const wrongSound = new Audio('sounds/oomph.mp3');
+const correctSound = new Audio('Sounds/ding.mp3');
+const wrongSound = new Audio('Sounds/oomph.mp3');
 
 // Score and tracking variables
 let score = 0;
