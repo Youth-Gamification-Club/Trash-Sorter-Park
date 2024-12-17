@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recycling Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Recycling Game</h1>
+    <p>Drag the trash items to the correct bins!</p>
+
+    <!-- Game area -->
+    <div id="game-area">
+        <!-- Trash items -->
+        <div class="trash" draggable="true">
+			<img src="images/plastic_bottle.png" alt="Plastic Bottle" id="plastic_1">
+		</div>
+		<div class="trash" draggable="true">
+			<img src="images/plastic_bag.png" alt="Plastic bag" id="plastic_2">
+		</div>
+		
+		<div class="trash" draggable="true">
+			<img src="images/paper_bag_1.png" alt="Paper Bag 1" id="paper_1">
+		</div>
+		<div class="trash" draggable="true">
+			<img src="images/paper_bag_2.png" alt="Paper Bag 2" id="paper_2">
+		</div>
+		
+        <div class="trash" draggable="true">
+			<img src="images/metal_can_1.png" alt="Metal Can 1" id="metal_1">
+		</div>
+		<div class="trash" draggable="true">
+			<img src="images/metal_can_2.png" alt="Metal Can 2" id="metal_2">
+		</div>
+		
+        <div class="trash" draggable="true">
+			<img src="images/glass_bottle.png" alt="Glass Bottle" id="glass_1">
+		</div>
+		<div class="trash" draggable="true">
+			<img src="images/glass_jar.png" alt="Glass Jar" id="glass_2">
+		</div>
+
+        <!-- Bins -->
+        <div class="bin" id="plastic-bin">
+			<img src="images/plastic-bin.png" alt="Plastic Bin">
+		</div>
+        <div class="bin" id="paper-bin">
+			<img src="images/paper-bin.png" alt="Paper Bin">
+		</div>
+        <div class="bin" id="metal-bin">
+			<img src="images/metal-bin.png" alt="Metal Bin">
+		</div>
+        <div class="bin" id="glass-bin">
+			<img src="images/glass-bin.png" alt="Glass Bin">
+		</div>
+		
+		<!-- Scoreboard -->
+		<div id="scoreboard">
+		    <h2>Score: <span id="score">0</span></h2>
+		</div>
+		
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
