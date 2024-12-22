@@ -2,6 +2,18 @@
 const trashItems = document.querySelectorAll('.trash');
 const bins = document.querySelectorAll('.bin');
 
+// Trash item info
+const trashInfo = {
+    plastic_1: "Plastic bottles are recyclable and can be turned into new bottles or clothing!",
+    plastic_2: "Plastic bags should be recycled at special drop-off locations, not in regular bins.",
+    paper_1: "Paper bags are biodegradable and easily recyclable into new paper products.",
+    paper_2: "Recycling paper saves energy and reduces the need for cutting down trees.",
+    metal_1: "Metal cans are highly recyclable and can be endlessly reused without losing quality.",
+    metal_2: "Recycling aluminum cans saves up to 95% of the energy needed to produce new ones.",
+    glass_1: "Glass bottles can be recycled infinitely without losing quality.",
+    glass_2: "Glass jars are perfect for recycling or repurposing as storage containers."
+};
+
 // Add drag event listeners to trash items
 trashItems.forEach(item => {
     item.addEventListener('dragstart', dragStart);
@@ -53,6 +65,47 @@ function dragEnd(event) {
 function dragOver(event) {
     event.preventDefault(); // Allows dropping
 }
+
+// Show info modal
+function showInfo(trashId) {
+    const modal = document.getElementById('info-modal');
+    const infoText = document.getElementById('info-text');
+    infoText.textContent = trashInfo[trashId] || "No information available.";
+    modal.classList.remove('hidden');
+}
+
+// Close modal
+document.getElementById('close-info').addEventListener('click', () => {
+    document.getElementById('info-modal').classList.add('hidden');
+});
+
+// Drag-and-drop logic
+document.querySelectorAll('.trash').forEach(item => {
+    item.addEventListener('dragend', (event) => {
+        const trashId = event.target.id;
+        const binId = event.target.closest('.bin')?.id;
+        
+        if (binId && isCorrectBin(trashId, binId)) {
+            updateScore(10); // Assume `updateScore` handles score
+            showInfo(trashId); // Show information
+        }
+    });
+});
+
+// Helper function to check if the trash is in the correct bin
+function isCorrectBin(trashId, binId) {
+    // Add logic to match trash items to bins
+    const binMapping = {
+        plastic_1: "plastic-bin",
+        plastic_2: "plastic-bin",
+        paper_1: "paper-bin",
+        paper_2: "paper-bin",
+        metal_1: "metal-bin",
+        metal_2: "metal-bin",
+        glass_1: "glass-bin",
+        glass_2: "glass-bin"
+    };
+    return binMappin
 
 function drop(event) {
     event.preventDefault();
