@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-image: url('images/background.jpg'); /* Path to the background image */
-    background-size: 100vw;
+    background-size: 100vh;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh; /* Fill the entire screen */
