@@ -38,7 +38,7 @@ p {
     gap: 20px; /* Spacing between items */
     justify-items: center;
     align-items: center;
-    height: 100%;
+    width: 80%;
     margin: 20px auto;
 }
 
