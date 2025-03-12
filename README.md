@@ -13,23 +13,22 @@ A fun and educational drag-and-drop game where players sort different trash item
 - **JavaScript** for drag-and-drop interactions and game logic.
 
 ## Installation
-Make sure you have git installed locally ([Installation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git))
+Make sure you have git installed locally If not, you can checkout this ([Installation Manual](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git))
 1. Clone this repository:
    ```sh
-   git clone https://github.com/your-username/recycling-game.git
+   git clone https://github.com/Youth-Gamification-CLub/Trash-Sorter-Park.git
    ```
 2. Navigate to the project folder:
    ```sh
-   cd recycling-game
+   cd Trash-Sorter-Park
    ```
-3. Open `index.html` in your web browser.
+3. Open `index.html` in your web browser, or launch an http-server (for example, via `pnpm dlx serve`!) if you're confortable with that.
 
 ## How to Play
 1. Drag a trash item to a bin.
 2. If the item is dropped in the correct bin:
    - The bin glows green.
    - You earn 1 point.
-   - If all items of a type are sorted, you get a 5-point bonus!
 3. If the item is dropped in the wrong bin:
    - The bin glows red.
    - You lose 1 point.
