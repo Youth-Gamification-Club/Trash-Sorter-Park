@@ -25,7 +25,7 @@ const totalTrashCounts = {
     plastic: document.querySelectorAll('[id^="plastic"]').length,
     paper: document.querySelectorAll('[id^="paper"]').length,
     metal: document.querySelectorAll('[id^="metal"]').length,
-    glass: document.querySelectorAll('[id^="glass"]').length
+    glass: document.querySelectorAll('[id^="glass"]').length,
 };
 
 // Function to update score
@@ -77,9 +77,9 @@ function drop(event) {
     console.log(`Dropped ${trashId} into ${binId}`);
 
     // Check if dropped into the correct bin
-    if (binId.startsWith(trashType)) { 
-        bin.appendChild(trashItem); 
-        correctSound.play(); 
+    if (binId.startsWith(trashType)) {
+        bin.appendChild(trashItem);
+        correctSound.play();
         bin.classList.add("success-bin");
 
         updateScore(1);
@@ -95,15 +95,28 @@ function drop(event) {
 
         // Set split info text (1st part for 1st item, 2nd part for 2nd item)
         const materialInfo = {
-            plastic: ["Plastic takes hundreds of years to decompose.", "Recycling helps reduce pollution!"],
-            paper: ["Paper is made from trees.", "Recycling saves forests and reduces waste."],
-            metal: ["Metal is highly recyclable.", "It can be melted and reused many times."],
-            glass: ["Glass is 100% recyclable.", "It can be reused without losing quality."]
+            plastic: [
+                "Plastic takes hundreds of years to decompose.",
+                "Recycling helps reduce pollution!",
+            ],
+            paper: [
+                "Paper is made from trees.",
+                "Recycling saves forests and reduces waste.",
+            ],
+            metal: [
+                "Metal is highly recyclable.",
+                "It can be melted and reused many times.",
+            ],
+            glass: [
+                "Glass is 100% recyclable.",
+                "It can be reused without losing quality.",
+            ],
         };
 
         // Show different info based on the count
         const infoIndex = sortedCounts[trashType] - 1; // 0 for first item, 1 for second item
-        infoBox.textContent = materialInfo[trashType][infoIndex] || "Unknown material.";
+        infoBox.textContent =
+            materialInfo[trashType][infoIndex] || "Unknown material.";
         infoBox.style.display = "block";
 
         console.log(`Info Box Displayed: ${infoBox.textContent}`);
