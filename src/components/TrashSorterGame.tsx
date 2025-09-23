@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
+import { useDrag, useDrop } from "react-dnd";
 import toast from "react-hot-toast";
 
 // Asset imports (relative paths so Vite bundles them)
@@ -101,7 +102,7 @@ export default function TrashSorterGame() {
             },
             { id: "glass_2", type: "glass", src: glassJar, alt: "Glass jar" },
         ],
-        [],
+        []
     );
 
     const totalCounts = useMemo(() => {
@@ -110,7 +111,7 @@ export default function TrashSorterGame() {
             { plastic: 0, paper: 0, metal: 0, glass: 0 } as Record<
                 Material,
                 number
-            >,
+            >
         );
     }, [initialItems]);
 
@@ -129,7 +130,6 @@ export default function TrashSorterGame() {
         Partial<Record<Material, string>>
     >({});
     const [gameOver, setGameOver] = useState(false);
-    const [wrongCount, setWrongCount] = useState(0);
 
     // Reuse audio instances
     const correctSoundRef = useRef<HTMLAudioElement | null>(null);
@@ -144,20 +144,6 @@ export default function TrashSorterGame() {
         }
     }, [items.length, gameOver]);
 
-    const onDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
-        e.dataTransfer.setData("text/plain", id);
-        const target = e.currentTarget;
-        target.classList.add("dragging");
-    };
-
-    const onDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-        e.currentTarget.classList.remove("dragging");
-    };
-
-    const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-    };
-
     const play = (audio: HTMLAudioElement | null) => {
         if (!audio) return;
         audio.currentTime = 0;
@@ -167,7 +153,7 @@ export default function TrashSorterGame() {
     const handleCorrectDrop = (material: Material, droppedId: string) => {
         // Remove item from list
         setItems((prev: TrashItem[]) =>
-            prev.filter((i: TrashItem) => i.id !== droppedId),
+            prev.filter((i: TrashItem) => i.id !== droppedId)
         );
 
         // Score and counts
@@ -186,7 +172,7 @@ export default function TrashSorterGame() {
             }));
             setTimeout(
                 () => setInfoByBin((ib) => ({ ...ib, [material]: "" })),
-                3000,
+                3000
             );
 
             // Bonus if all of that material are sorted
@@ -201,7 +187,7 @@ export default function TrashSorterGame() {
         setBinGlow((bg) => ({ ...bg, [material]: "success" }));
         setTimeout(
             () => setBinGlow((bg) => ({ ...bg, [material]: undefined })),
-            500,
+            500
         );
 
         play(correctSoundRef.current);
@@ -209,33 +195,110 @@ export default function TrashSorterGame() {
 
     const handleWrongDrop = (material: Material) => {
         setScore((s: number) => s - 1);
-        setWrongCount((prev) => prev + 1);
         setBinGlow((bg) => ({ ...bg, [material]: "error" }));
         setTimeout(
             () => setBinGlow((bg) => ({ ...bg, [material]: undefined })),
-            1000,
+            1000
         );
         play(wrongSoundRef.current);
     };
 
-    const onDrop = (
-        e: React.DragEvent<HTMLDivElement>,
-        binMaterial: Material,
-    ) => {
-        e.preventDefault();
-        const id = e.dataTransfer.getData("text/plain");
-        const item = items.find((i) => i.id === id);
-        if (!item) return;
-
-        const trashType = (id.split("_")[0] ?? "") as Material;
-        if (trashType === binMaterial) {
-            handleCorrectDrop(binMaterial, id);
-        } else {
-            handleWrongDrop(binMaterial);
-        }
-    };
+    // onDrop is unused with react-dnd but kept for fallback; react-dnd handlers below perform drops
 
     const materials: Material[] = ["plastic", "paper", "metal", "glass"];
+
+    // Helper drag-and-drop components using react-dnd
+    function DraggableTrash({ item }: { item: TrashItem }) {
+        const [{ isDragging }, dragRef] = useDrag(() => ({
+            type: item.type,
+            item: { id: item.id, type: item.type },
+            collect: (monitor) => ({
+                isDragging: !!monitor.isDragging(),
+            }),
+        }));
+
+        return (
+            <div
+                id={item.id}
+                ref={dragRef as any}
+                className={`trash w-[120px] h-[120px] cursor-grab text-center flex items-center justify-center ${
+                    isDragging ? "opacity-60 scale-95" : ""
+                }`}
+            >
+                <img
+                    src={item.src}
+                    alt={item.alt}
+                    className="max-w-[100px] max-h-[100px]"
+                />
+            </div>
+        );
+    }
+
+    function BinDropTarget({
+        mat,
+        binGlow,
+        infoByBin,
+        onDropCorrect,
+        onDropWrong,
+    }: {
+        mat: Material;
+        binGlow: Partial<Record<Material, "success" | "error">>;
+        infoByBin: Partial<Record<Material, string>>;
+        onDropCorrect: (droppedId: string) => void;
+        onDropWrong: () => void;
+    }) {
+        const [{ isOver, draggedItem }, dropRef] = useDrop(() => ({
+            accept: ["plastic", "paper", "metal", "glass"],
+            drop: (dropped: { id: string; type: Material }) => {
+                if (dropped.type === mat) onDropCorrect(dropped.id);
+                else onDropWrong();
+                return undefined;
+            },
+            collect: (monitor) => ({
+                isOver: !!monitor.isOver(),
+                draggedItem: monitor.getItem() as { type: Material } | null,
+            }),
+        }));
+
+        const isCorrectBin = isOver && draggedItem && draggedItem.type === mat;
+        const isWrongBin = isOver && draggedItem && draggedItem.type !== mat;
+
+        return (
+            <div
+                ref={dropRef as any}
+                id={`${mat}-bin`}
+                className={`bin w-[150px] min-h-[150px] flex items-center justify-center relative rounded-lg flex-col transition-all duration-200 ${
+                    binGlow[mat] === "success"
+                        ? "shadow-[0_0_20px_5px_rgba(0,107,0,1)] border-[3px] border-green-500"
+                        : ""
+                } ${
+                    binGlow[mat] === "error"
+                        ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500"
+                        : ""
+                } ${
+                    isCorrectBin
+                        ? "shadow-[0_0_20px_5px_rgba(0,107,0,1)] border-[3px] border-green-500 scale-105"
+                        : ""
+                } ${
+                    isWrongBin
+                        ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500 scale-105"
+                        : ""
+                }`}
+            >
+                <img
+                    src={binImages[mat]}
+                    alt={`${mat} bin`}
+                    className="w-full h-auto"
+                />
+                <div
+                    className="info-box hidden w-11/12 text-center bg-black/70 text-white p-2 rounded text-sm mt-2.5"
+                    style={{ display: infoByBin[mat] ? "block" : "none" }}
+                >
+                    {infoByBin[mat]}
+                </div>
+            </div>
+        );
+    }
 
     const restartGame = () => {
         setItems(initialItems);
@@ -247,7 +310,6 @@ export default function TrashSorterGame() {
             glass: 0,
         });
         setGameOver(false);
-        setWrongCount(0);
         setBinGlow({});
         setInfoByBin({});
     };
@@ -260,18 +322,7 @@ export default function TrashSorterGame() {
 
             <div className="space-y-4">
                 <p className="text-3xl font-semibold">
-                    Your Final Score:{" "}
-                    <span className="text-blue-600">{score}</span>
-                </p>
-                <p className="text-2xl">
-                    Mistakes Made:{" "}
-                    <span
-                        className={
-                            wrongCount === 0 ? "text-green-500" : "text-red-500"
-                        }
-                    >
-                        {wrongCount}
-                    </span>
+                    Your Final Score: <span className="text-blue-600">{score}</span>
                 </p>
             </div>
 
@@ -302,56 +353,22 @@ export default function TrashSorterGame() {
                     <div className="grid grid-cols-4 auto-rows-auto gap-5 justify-items-start items-start w-full mx-auto mb-5">
                         <div className="col-span-full grid grid-cols-8 gap-5 w-full">
                             {items.map((item) => (
-                                <div
-                                    key={item.id}
-                                    id={item.id}
-                                    className="trash w-[120px] h-[120px] cursor-grab text-center flex items-center justify-center"
-                                    draggable
-                                    onDragStart={(e) => onDragStart(e, item.id)}
-                                    onDragEnd={onDragEnd}
-                                >
-                                    <img
-                                        src={item.src}
-                                        alt={item.alt}
-                                        className="max-w-[100px] max-h-[100px]"
-                                    />
-                                </div>
+                                <DraggableTrash key={item.id} item={item} />
                             ))}
                         </div>
 
                         <div className="col-span-full grid grid-cols-4 gap-5 w-full">
                             {materials.map((mat) => (
-                                <div
+                                <BinDropTarget
                                     key={mat}
-                                    id={`${mat}-bin`}
-                                    className={`bin w-[150px] min-h-[150px] flex items-center justify-center relative rounded-lg flex-col ${
-                                        binGlow[mat] === "success"
-                                            ? "shadow-[0_0_20px_5px_rgba(0,107,0,1)] border-[3px] border-green-500"
-                                            : ""
-                                    } ${
-                                        binGlow[mat] === "error"
-                                            ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500"
-                                            : ""
-                                    }`}
-                                    onDragOver={onDragOver}
-                                    onDrop={(e) => onDrop(e, mat)}
-                                >
-                                    <img
-                                        src={binImages[mat]}
-                                        alt={`${mat} bin`}
-                                        className="w-full h-auto"
-                                    />
-                                    <div
-                                        className="info-box hidden w-11/12 text-center bg-black/70 text-white p-2 rounded text-sm mt-2.5"
-                                        style={{
-                                            display: infoByBin[mat]
-                                                ? "block"
-                                                : "none",
-                                        }}
-                                    >
-                                        {infoByBin[mat]}
-                                    </div>
-                                </div>
+                                    mat={mat}
+                                    binGlow={binGlow}
+                                    infoByBin={infoByBin}
+                                    onDropCorrect={(droppedId: string) =>
+                                        handleCorrectDrop(mat, droppedId)
+                                    }
+                                    onDropWrong={() => handleWrongDrop(mat)}
+                                />
                             ))}
                         </div>
                     </div>
