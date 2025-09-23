@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import toast from "react-hot-toast";
 
@@ -102,7 +102,7 @@ export default function TrashSorterGame() {
             },
             { id: "glass_2", type: "glass", src: glassJar, alt: "Glass jar" },
         ],
-        []
+        [],
     );
 
     const totalCounts = useMemo(() => {
@@ -111,7 +111,7 @@ export default function TrashSorterGame() {
             { plastic: 0, paper: 0, metal: 0, glass: 0 } as Record<
                 Material,
                 number
-            >
+            >,
         );
     }, [initialItems]);
 
@@ -153,7 +153,7 @@ export default function TrashSorterGame() {
     const handleCorrectDrop = (material: Material, droppedId: string) => {
         // Remove item from list
         setItems((prev: TrashItem[]) =>
-            prev.filter((i: TrashItem) => i.id !== droppedId)
+            prev.filter((i: TrashItem) => i.id !== droppedId),
         );
 
         // Score and counts
@@ -172,7 +172,7 @@ export default function TrashSorterGame() {
             }));
             setTimeout(
                 () => setInfoByBin((ib) => ({ ...ib, [material]: "" })),
-                3000
+                3000,
             );
 
             // Bonus if all of that material are sorted
@@ -187,7 +187,7 @@ export default function TrashSorterGame() {
         setBinGlow((bg) => ({ ...bg, [material]: "success" }));
         setTimeout(
             () => setBinGlow((bg) => ({ ...bg, [material]: undefined })),
-            500
+            500,
         );
 
         play(correctSoundRef.current);
@@ -198,7 +198,7 @@ export default function TrashSorterGame() {
         setBinGlow((bg) => ({ ...bg, [material]: "error" }));
         setTimeout(
             () => setBinGlow((bg) => ({ ...bg, [material]: undefined })),
-            1000
+            1000,
         );
         play(wrongSoundRef.current);
     };
@@ -220,7 +220,7 @@ export default function TrashSorterGame() {
         return (
             <div
                 id={item.id}
-                ref={dragRef as any}
+                ref={dragRef as unknown as React.Ref<HTMLDivElement>}
                 className={`trash w-[120px] h-[120px] cursor-grab text-center flex items-center justify-center ${
                     isDragging ? "opacity-60 scale-95" : ""
                 }`}
@@ -265,7 +265,7 @@ export default function TrashSorterGame() {
 
         return (
             <div
-                ref={dropRef as any}
+                ref={dropRef as unknown as React.Ref<HTMLDivElement>}
                 id={`${mat}-bin`}
                 className={`bin w-[150px] min-h-[150px] flex items-center justify-center relative rounded-lg flex-col transition-all duration-200 ${
                     binGlow[mat] === "success"
@@ -322,7 +322,8 @@ export default function TrashSorterGame() {
 
             <div className="space-y-4">
                 <p className="text-3xl font-semibold">
-                    Your Final Score: <span className="text-blue-600">{score}</span>
+                    Your Final Score:{" "}
+                    <span className="text-blue-600">{score}</span>
                 </p>
             </div>
 
