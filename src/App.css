@@ -7,6 +7,64 @@
     text-align: center;
 }
 
+/* Game area: fixed layout */
+#game-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 80%;
+    margin: 20px auto;
+}
+
+#trash-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 40px; /* Space between trash and bins */
+}
+
+#bins-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+    padding-bottom: 20px; /* Space from bottom */
+}
+
+/* Trash item styling: fixed positions */
+.trash {
+    width: 120px;
+    height: 120px;
+    cursor: grab;
+    text-align: center;
+}
+
+.trash img {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+/* Bin styling: fixed positions */
+.bin {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 10px;
+    flex-direction: column; /* Ensures info box appears below */
+}
+
+.bin img {
+    width: 100%;
+    height: auto;
+}
+
 @media (prefers-reduced-motion: no-preference) {
     a:nth-of-type(2) .logo {
         animation: logo-spin infinite 20s linear;

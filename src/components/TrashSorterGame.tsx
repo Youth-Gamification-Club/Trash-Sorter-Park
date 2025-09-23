@@ -27,6 +27,7 @@ type TrashItem = {
     type: Material;
     src: string;
     alt: string;
+    sorted: boolean;
 };
 
 const materialInfo: Record<Material, [string, string]> = {
@@ -63,44 +64,57 @@ export default function TrashSorterGame() {
                 type: "plastic",
                 src: plasticBottle,
                 alt: "Plastic bottle",
+                sorted: false,
             },
             {
                 id: "plastic_2",
                 type: "plastic",
                 src: plasticBag,
                 alt: "Plastic bag",
+                sorted: false,
             },
             {
                 id: "paper_1",
                 type: "paper",
                 src: paperBag1,
                 alt: "Paper bag 1",
+                sorted: false,
             },
             {
                 id: "paper_2",
                 type: "paper",
                 src: paperBag2,
                 alt: "Paper bag 2",
+                sorted: false,
             },
             {
                 id: "metal_1",
                 type: "metal",
                 src: metalCan1,
                 alt: "Metal can 1",
+                sorted: false,
             },
             {
                 id: "metal_2",
                 type: "metal",
                 src: metalCan2,
                 alt: "Metal can 2",
+                sorted: false,
             },
             {
                 id: "glass_1",
                 type: "glass",
                 src: glassBottle,
                 alt: "Glass bottle",
+                sorted: false,
             },
-            { id: "glass_2", type: "glass", src: glassJar, alt: "Glass jar" },
+            {
+                id: "glass_2",
+                type: "glass",
+                src: glassJar,
+                alt: "Glass jar",
+                sorted: false,
+            },
         ],
         [],
     );
@@ -139,10 +153,10 @@ export default function TrashSorterGame() {
     if (!wrongSoundRef.current) wrongSoundRef.current = new Audio(oomphMp3);
 
     useEffect(() => {
-        if (items.length === 0 && !gameOver) {
+        if (items.every((i) => i.sorted) && !gameOver) {
             setGameOver(true);
         }
-    }, [items.length, gameOver]);
+    }, [items, gameOver]);
 
     const play = (audio: HTMLAudioElement | null) => {
         if (!audio) return;
@@ -151,9 +165,11 @@ export default function TrashSorterGame() {
     };
 
     const handleCorrectDrop = (material: Material, droppedId: string) => {
-        // Remove item from list
-        setItems((prev: TrashItem[]) =>
-            prev.filter((i: TrashItem) => i.id !== droppedId),
+        // Mark item as sorted
+        setItems((prev) =>
+            prev.map((item) =>
+                item.id === droppedId ? { ...item, sorted: true } : item,
+            ),
         );
 
         // Score and counts
@@ -223,7 +239,7 @@ export default function TrashSorterGame() {
                 ref={dragRef as unknown as React.Ref<HTMLDivElement>}
                 className={`trash w-[120px] h-[120px] cursor-grab text-center flex items-center justify-center ${
                     isDragging ? "opacity-60 scale-95" : ""
-                }`}
+                } ${item.sorted ? "opacity-0" : ""}`}
             >
                 <img
                     src={item.src}
@@ -301,7 +317,12 @@ export default function TrashSorterGame() {
     }
 
     const restartGame = () => {
-        setItems(initialItems);
+        setItems(
+            initialItems.map((i) => ({
+                ...i,
+                sorted: false,
+            })),
+        );
         setScore(0);
         setSortedCounts({
             plastic: 0,
@@ -338,7 +359,7 @@ export default function TrashSorterGame() {
     );
 
     return (
-        <div className="trash-sorter-wrapper w-full">
+        <div className="trash-sorter-wrapper w-full flex flex-col h-full">
             {gameOver ? (
                 <GameOver />
             ) : (
@@ -351,14 +372,13 @@ export default function TrashSorterGame() {
                         <span aria-hidden className="sparkle" />
                     </h1>
 
-                    <div className="grid grid-cols-4 auto-rows-auto gap-5 justify-items-start items-start w-full mx-auto mb-5">
-                        <div className="col-span-full grid grid-cols-8 gap-5 w-full">
+                    <div id="game-area">
+                        <div id="trash-container">
                             {items.map((item) => (
                                 <DraggableTrash key={item.id} item={item} />
                             ))}
                         </div>
-
-                        <div className="col-span-full grid grid-cols-4 gap-5 w-full">
+                        <div id="bins-container">
                             {materials.map((mat) => (
                                 <BinDropTarget
                                     key={mat}
@@ -373,7 +393,7 @@ export default function TrashSorterGame() {
                             ))}
                         </div>
                     </div>
-                    <p className="mt-0 mb-6 text-center game-subtitle text-base sm:text-lg">
+                    <p className="pb-6 text-center game-subtitle text-base sm:text-lg bg-white/80 rounded-t-lg shadow-lg font-bold text-black p-4">
                         Drag each item into the correct recycling bin!
                     </p>
                 </>
