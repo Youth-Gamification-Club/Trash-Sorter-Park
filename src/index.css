@@ -2,8 +2,12 @@
 
 /* Base font family */
 :root {
-    --title-font: 'Luckiest Guy', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
-    --body-font: 'Nunito', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif;
+    --title-font:
+        "Luckiest Guy", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+        Cantarell, "Helvetica Neue", Arial, sans-serif;
+    --body-font:
+        "Nunito", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+        Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
@@ -12,53 +16,87 @@ body {
 
 /* Gamified Title Styles */
 .game-title {
-  font-family: var(--title-font);
-  letter-spacing: 0.5px;
-  line-height: 1.05;
-  color: #fff;
-  background: linear-gradient(180deg, #6be6ff 0%, #2fd1ff 40%, #0ab6ff 70%, #0890ff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  position: relative;
-  display: inline-block;
-  animation: title-pop 600ms ease-out forwards, title-wobble 4s ease-in-out 800ms infinite;
-}.game-title .sparkle {
-  position: absolute;
-  top: -6px;
-  right: -12px;
-  width: 14px;
-  height: 14px;
-  background: radial-gradient(circle, #fff 0 40%, rgba(255,255,255,0) 60%);
-  border-radius: 50%;
-  animation: sparkle 1.8s ease-in-out infinite;
+    font-family: var(--title-font);
+    letter-spacing: 0.5px;
+    line-height: 1.05;
+    color: #fff;
+    background: linear-gradient(
+        180deg,
+        #6be6ff 0%,
+        #2fd1ff 40%,
+        #0ab6ff 70%,
+        #0890ff 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+    animation:
+        title-pop 600ms ease-out forwards,
+        title-wobble 4s ease-in-out 800ms infinite;
+}
+.game-title .sparkle {
+    position: absolute;
+    top: -6px;
+    right: -12px;
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle, #fff 0 40%, rgba(255, 255, 255, 0) 60%);
+    border-radius: 50%;
+    animation: sparkle 1.8s ease-in-out infinite;
 }
 
 .game-subtitle {
-  font-weight: 800;
-  color: #073b4c;
-  text-shadow: 0 1px 0 rgba(255,255,255,.6);
-  background: rgba(255,255,255,.6);
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 2px solid rgba(255,255,255,.9);
-}@keyframes title-pop {
-    0% { transform: translateY(8px) scale(0.9); opacity: 0; }
-    60% { transform: translateY(-4px) scale(1.04); opacity: 1; }
-    100% { transform: translateY(0) scale(1); }
+    font-weight: 800;
+    color: #073b4c;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.6);
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+}
+@keyframes title-pop {
+    0% {
+        transform: translateY(8px) scale(0.9);
+        opacity: 0;
+    }
+    60% {
+        transform: translateY(-4px) scale(1.04);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
 }
 
 @keyframes title-wobble {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(0.6deg); }
-    50% { transform: rotate(-0.6deg); }
-    75% { transform: rotate(0.4deg); }
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(0.6deg);
+    }
+    50% {
+        transform: rotate(-0.6deg);
+    }
+    75% {
+        transform: rotate(0.4deg);
+    }
 }
 
 @keyframes sparkle {
-    0%, 100% { transform: scale(0.6) translateY(0); opacity: .7; }
-    50% { transform: scale(1) translateY(-2px); opacity: 1; }
+    0%,
+    100% {
+        transform: scale(0.6) translateY(0);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1) translateY(-2px);
+        opacity: 1;
+    }
 }
 
 .trash.dragging {
@@ -71,9 +109,9 @@ body {
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* Ensure full screen coverage */

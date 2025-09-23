@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 // Asset imports (relative paths so Vite bundles them)
 import plasticBottle from "/images/plastic_bottle.png";
@@ -183,7 +184,7 @@ export default function TrashSorterGame() {
             // Bonus if all of that material are sorted
             if (next[material] === totalCounts[material]) {
                 setScore((s: number) => s + 5);
-                alert(`Bonus! You sorted all ${material} items!`);
+                toast.success(`Bonus! You sorted all ${material} items!`);
             }
             return next;
         });
