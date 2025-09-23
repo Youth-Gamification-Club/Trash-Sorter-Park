@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 // Asset imports (relative paths so Vite bundles them)
@@ -128,6 +128,8 @@ export default function TrashSorterGame() {
     const [infoByBin, setInfoByBin] = useState<
         Partial<Record<Material, string>>
     >({});
+    const [gameOver, setGameOver] = useState(false);
+    const [wrongCount, setWrongCount] = useState(0);
 
     // Reuse audio instances
     const correctSoundRef = useRef<HTMLAudioElement | null>(null);
@@ -135,6 +137,12 @@ export default function TrashSorterGame() {
 
     if (!correctSoundRef.current) correctSoundRef.current = new Audio(dingMp3);
     if (!wrongSoundRef.current) wrongSoundRef.current = new Audio(oomphMp3);
+
+    useEffect(() => {
+        if (items.length === 0 && !gameOver) {
+            setGameOver(true);
+        }
+    }, [items.length, gameOver]);
 
     const onDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
         e.dataTransfer.setData("text/plain", id);
@@ -201,6 +209,7 @@ export default function TrashSorterGame() {
 
     const handleWrongDrop = (material: Material) => {
         setScore((s: number) => s - 1);
+        setWrongCount((prev) => prev + 1);
         setBinGlow((bg) => ({ ...bg, [material]: "error" }));
         setTimeout(
             () => setBinGlow((bg) => ({ ...bg, [material]: undefined })),
@@ -228,73 +237,129 @@ export default function TrashSorterGame() {
 
     const materials: Material[] = ["plastic", "paper", "metal", "glass"];
 
+    const restartGame = () => {
+        setItems(initialItems);
+        setScore(0);
+        setSortedCounts({
+            plastic: 0,
+            paper: 0,
+            metal: 0,
+            glass: 0,
+        });
+        setGameOver(false);
+        setWrongCount(0);
+        setBinGlow({});
+        setInfoByBin({});
+    };
+
+    const GameOver = () => (
+        <div className="game-over text-center flex flex-col items-center justify-center min-h-screen space-y-12 px-4">
+            <h2 className="text-6xl font-extrabold text-green-600">
+                Well Done!
+            </h2>
+
+            <div className="space-y-4">
+                <p className="text-3xl font-semibold">
+                    Your Final Score:{" "}
+                    <span className="text-blue-600">{score}</span>
+                </p>
+                <p className="text-2xl">
+                    Mistakes Made:{" "}
+                    <span
+                        className={
+                            wrongCount === 0 ? "text-green-500" : "text-red-500"
+                        }
+                    >
+                        {wrongCount}
+                    </span>
+                </p>
+            </div>
+
+            <button
+                onClick={restartGame}
+                className="inline-flex items-center justify-center px-16 py-8 bg-green-500 text-white rounded-full hover:bg-green-600 text-3xl font-extrabold shadow-2xl transform hover:scale-105 transition-all duration-200 min-w-[320px]"
+            >
+                <span className="mr-3 text-2xl">♻️</span>
+                <span>Play Again</span>
+            </button>
+        </div>
+    );
+
     return (
         <div className="trash-sorter-wrapper w-full">
-            <div className="fixed top-2.5 right-2.5 bg-white/80 px-8 py-4 rounded-lg shadow-lg text-xl font-bold text-black min-w-[120px]">
-                Score: <span id="score">{score}</span>
-            </div>
-            <h1 className="mt-2 mb-3 text-center game-title text-5xl sm:text-6xl">
-                Trash Sorter Park
-                <span aria-hidden className="sparkle" />
-            </h1>
+            {gameOver ? (
+                <GameOver />
+            ) : (
+                <>
+                    <div className="fixed top-2.5 right-2.5 bg-white/80 px-8 py-4 rounded-lg shadow-lg text-xl font-bold text-black min-w-[120px]">
+                        Score: <span id="score">{score}</span>
+                    </div>
+                    <h1 className="mt-2 mb-3 text-center game-title text-5xl sm:text-6xl">
+                        Trash Sorter Park
+                        <span aria-hidden className="sparkle" />
+                    </h1>
 
-            <div className="grid grid-cols-4 auto-rows-auto gap-5 justify-items-start items-start w-full mx-auto mb-5">
-                <div className="col-span-full grid grid-cols-8 gap-5 w-full">
-                    {items.map((item) => (
-                        <div
-                            key={item.id}
-                            id={item.id}
-                            className="trash w-[120px] h-[120px] cursor-grab text-center flex items-center justify-center"
-                            draggable
-                            onDragStart={(e) => onDragStart(e, item.id)}
-                            onDragEnd={onDragEnd}
-                        >
-                            <img
-                                src={item.src}
-                                alt={item.alt}
-                                className="max-w-[100px] max-h-[100px]"
-                            />
+                    <div className="grid grid-cols-4 auto-rows-auto gap-5 justify-items-start items-start w-full mx-auto mb-5">
+                        <div className="col-span-full grid grid-cols-8 gap-5 w-full">
+                            {items.map((item) => (
+                                <div
+                                    key={item.id}
+                                    id={item.id}
+                                    className="trash w-[120px] h-[120px] cursor-grab text-center flex items-center justify-center"
+                                    draggable
+                                    onDragStart={(e) => onDragStart(e, item.id)}
+                                    onDragEnd={onDragEnd}
+                                >
+                                    <img
+                                        src={item.src}
+                                        alt={item.alt}
+                                        className="max-w-[100px] max-h-[100px]"
+                                    />
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
 
-                <div className="col-span-full grid grid-cols-4 gap-5 w-full">
-                    {materials.map((mat) => (
-                        <div
-                            key={mat}
-                            id={`${mat}-bin`}
-                            className={`bin w-[150px] min-h-[150px] flex items-center justify-center relative rounded-lg flex-col ${
-                                binGlow[mat] === "success"
-                                    ? "shadow-[0_0_20px_5px_rgba(0,107,0,1)] border-[3px] border-green-500"
-                                    : ""
-                            } ${
-                                binGlow[mat] === "error"
-                                    ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500"
-                                    : ""
-                            }`}
-                            onDragOver={onDragOver}
-                            onDrop={(e) => onDrop(e, mat)}
-                        >
-                            <img
-                                src={binImages[mat]}
-                                alt={`${mat} bin`}
-                                className="w-full h-auto"
-                            />
-                            <div
-                                className="info-box hidden w-11/12 text-center bg-black/70 text-white p-2 rounded text-sm mt-2.5"
-                                style={{
-                                    display: infoByBin[mat] ? "block" : "none",
-                                }}
-                            >
-                                {infoByBin[mat]}
-                            </div>
+                        <div className="col-span-full grid grid-cols-4 gap-5 w-full">
+                            {materials.map((mat) => (
+                                <div
+                                    key={mat}
+                                    id={`${mat}-bin`}
+                                    className={`bin w-[150px] min-h-[150px] flex items-center justify-center relative rounded-lg flex-col ${
+                                        binGlow[mat] === "success"
+                                            ? "shadow-[0_0_20px_5px_rgba(0,107,0,1)] border-[3px] border-green-500"
+                                            : ""
+                                    } ${
+                                        binGlow[mat] === "error"
+                                            ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500"
+                                            : ""
+                                    }`}
+                                    onDragOver={onDragOver}
+                                    onDrop={(e) => onDrop(e, mat)}
+                                >
+                                    <img
+                                        src={binImages[mat]}
+                                        alt={`${mat} bin`}
+                                        className="w-full h-auto"
+                                    />
+                                    <div
+                                        className="info-box hidden w-11/12 text-center bg-black/70 text-white p-2 rounded text-sm mt-2.5"
+                                        style={{
+                                            display: infoByBin[mat]
+                                                ? "block"
+                                                : "none",
+                                        }}
+                                    >
+                                        {infoByBin[mat]}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </div>
-            <p className="mt-0 mb-6 text-center game-subtitle text-base sm:text-lg">
-                Drag each item into the correct recycling bin!
-            </p>
+                    </div>
+                    <p className="mt-0 mb-6 text-center game-subtitle text-base sm:text-lg">
+                        Drag each item into the correct recycling bin!
+                    </p>
+                </>
+            )}
         </div>
     );
 }
