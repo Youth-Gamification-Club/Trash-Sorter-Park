@@ -1,58 +1,69 @@
-# Trash-Sorter-Game
+# React + TypeScript + Vite
 
-A fun and educational drag-and-drop game where players sort different trash items into the correct recycling bins. The game provides feedback with sound effects and scoring, encouraging players to learn about proper waste management. The GitHub pages website is available at https://youth-gamification-club.github.io/Trash-Sorter-Park.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- Drag and drop trash items into the correct bins.
-- Visual and sound feedback for correct and incorrect sorting.
-- Score tracking with bonus points for sorting all items of a type.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Technologies Used
+## Expanding the ESLint configuration
 
-- **HTML** for structuring the game layout.
-- **CSS** for styling and visual effects.
-- **JavaScript** for drag-and-drop interactions and game logic.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## Installation
+```js
+export default defineConfig([
+    globalIgnores(["dist"]),
+    {
+        files: ["**/*.{ts,tsx}"],
+        extends: [
+            // Other configs...
 
-Make sure you have git installed locally ([Installation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git))
+            // Remove tseslint.configs.recommended and replace with this
+            tseslint.configs.recommendedTypeChecked,
+            // Alternatively, use this for stricter rules
+            tseslint.configs.strictTypeChecked,
+            // Optionally, add this for stylistic rules
+            tseslint.configs.stylisticTypeChecked,
 
-1. Clone this repository:
-    ```sh
-    git clone https://github.com/your-username/recycling-game.git
-    ```
-2. Navigate to the project folder:
-    ```sh
-    cd recycling-game
-    ```
-3. Open `index.html` in your web browser.
-
-## How to Play
-
-1. Drag a trash item to a bin.
-2. If the item is dropped in the correct bin:
-    - The bin glows green.
-    - You earn 1 point.
-    - If all items of a type are sorted, you get a 5-point bonus!
-3. If the item is dropped in the wrong bin:
-    - The bin glows red.
-    - You lose 1 point.
-4. The game continues until all items are sorted.
-
-## File Structure
-
-```
-recycling-game/
-│── index.html        # Main HTML file
-│── style.css         # Game styling
-│── script.js         # Game logic and interactions
-│── images/           # Image assets for bins and trash items
-│── Sounds/           # Audio files for game feedback
-└── README.md         # Project documentation
+            // Other configs...
+        ],
+        languageOptions: {
+            parserOptions: {
+                project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+                tsconfigRootDir: import.meta.dirname,
+            },
+            // other options...
+        },
+    },
+]);
 ```
 
-## Credits
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-- Icons and images sourced from free resources.
-- Sound effects from royalty-free sources.
+```js
+// eslint.config.js
+import reactX from "eslint-plugin-react-x";
+import reactDom from "eslint-plugin-react-dom";
+
+export default defineConfig([
+    globalIgnores(["dist"]),
+    {
+        files: ["**/*.{ts,tsx}"],
+        extends: [
+            // Other configs...
+            // Enable lint rules for React
+            reactX.configs["recommended-typescript"],
+            // Enable lint rules for React DOM
+            reactDom.configs.recommended,
+        ],
+        languageOptions: {
+            parserOptions: {
+                project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+                tsconfigRootDir: import.meta.dirname,
+            },
+            // other options...
+        },
+    },
+]);
+```
