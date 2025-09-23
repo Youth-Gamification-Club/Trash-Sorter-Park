@@ -229,13 +229,13 @@ export default function TrashSorterGame() {
 
     return (
         <div className="trash-sorter-wrapper w-full">
-            <div className="fixed top-2.5 right-2.5 bg-white/80 px-5 py-2.5 rounded-lg shadow-lg text-xl font-bold text-black">
+            <div className="fixed top-2.5 right-2.5 bg-white/80 px-8 py-4 rounded-lg shadow-lg text-xl font-bold text-black min-w-[120px]">
                 Score: <span id="score">{score}</span>
             </div>
-            <h1 className="mt-0 mb-3 text-4xl text-center">Trash Sorter Park</h1>
-            <p className="mt-0 mb-4 text-lg text-center">
-                Drag each item into the correct recycling bin!
-            </p>
+            <h1 className="mt-2 mb-3 text-center game-title text-5xl sm:text-6xl">
+                Trash Sorter Park
+                <span aria-hidden className="sparkle" />
+            </h1>
 
             <div className="grid grid-cols-4 auto-rows-auto gap-5 justify-items-start items-start w-full mx-auto mb-5">
                 <div className="col-span-full grid grid-cols-8 gap-5 w-full">
@@ -291,6 +291,9 @@ export default function TrashSorterGame() {
                     ))}
                 </div>
             </div>
+            <p className="mt-0 mb-6 text-center game-subtitle text-base sm:text-lg">
+                Drag each item into the correct recycling bin!
+            </p>
         </div>
     );
 }
