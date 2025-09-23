@@ -228,45 +228,61 @@ export default function TrashSorterGame() {
     const materials: Material[] = ["plastic", "paper", "metal", "glass"];
 
     return (
-        <div className="trash-sorter-wrapper">
-            <div id="scoreboard">
+        <div className="trash-sorter-wrapper w-full">
+            <div className="fixed top-2.5 right-2.5 bg-white/80 px-5 py-2.5 rounded-lg shadow-lg text-xl font-bold text-black">
                 Score: <span id="score">{score}</span>
             </div>
-            <h1>Trash Sorter Park</h1>
-            <p>Drag each item into the correct recycling bin!</p>
+            <h1 className="mt-0 mb-3 text-4xl text-center">Trash Sorter Park</h1>
+            <p className="mt-0 mb-4 text-lg text-center">
+                Drag each item into the correct recycling bin!
+            </p>
 
-            <div id="game-area">
-                <div className="trash-row">
+            <div className="grid grid-cols-4 auto-rows-auto gap-5 justify-items-start items-start w-full mx-auto mb-5">
+                <div className="col-span-full grid grid-cols-8 gap-5 w-full">
                     {items.map((item) => (
                         <div
                             key={item.id}
                             id={item.id}
-                            className="trash"
+                            className="trash w-[120px] h-[120px] cursor-grab text-center flex items-center justify-center"
                             draggable
                             onDragStart={(e) => onDragStart(e, item.id)}
                             onDragEnd={onDragEnd}
                         >
-                            <img src={item.src} alt={item.alt} />
+                            <img
+                                src={item.src}
+                                alt={item.alt}
+                                className="max-w-[100px] max-h-[100px]"
+                            />
                         </div>
                     ))}
                 </div>
 
-                <div className="bins-row">
+                <div className="col-span-full grid grid-cols-4 gap-5 w-full">
                     {materials.map((mat) => (
                         <div
                             key={mat}
                             id={`${mat}-bin`}
-                            className={`bin ${binGlow[mat] === "success" ? "success-bin" : ""} ${binGlow[mat] === "error" ? "error-bin" : ""}`}
+                            className={`bin w-[150px] min-h-[150px] flex items-center justify-center relative rounded-lg flex-col ${
+                                binGlow[mat] === "success"
+                                    ? "shadow-[0_0_20px_5px_rgba(0,107,0,1)] border-[3px] border-green-500"
+                                    : ""
+                            } ${
+                                binGlow[mat] === "error"
+                                    ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500"
+                                    : ""
+                            }`}
                             onDragOver={onDragOver}
                             onDrop={(e) => onDrop(e, mat)}
                         >
-                            <img src={binImages[mat]} alt={`${mat} bin`} />
+                            <img
+                                src={binImages[mat]}
+                                alt={`${mat} bin`}
+                                className="w-full h-auto"
+                            />
                             <div
-                                className="info-box"
+                                className="info-box hidden w-11/12 text-center bg-black/70 text-white p-2 rounded text-sm mt-2.5"
                                 style={{
-                                    display: infoByBin[mat]
-                                        ? ("block" as const)
-                                        : "none",
+                                    display: infoByBin[mat] ? "block" : "none",
                                 }}
                             >
                                 {infoByBin[mat]}
