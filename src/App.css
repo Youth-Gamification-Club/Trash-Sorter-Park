@@ -7,13 +7,23 @@
     text-align: center;
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
 .levels-bg {
-    background: radial-gradient(1200px 600px at 80% -10%, rgba(34,211,238,0.25), transparent 60%),
-        radial-gradient(1000px 500px at -20% 110%, rgba(56,189,248,0.2), transparent 60%),
+    background:
+        radial-gradient(
+            1200px 600px at 80% -10%,
+            rgba(34, 211, 238, 0.25),
+            transparent 60%
+        ),
+        radial-gradient(
+            1000px 500px at -20% 110%,
+            rgba(56, 189, 248, 0.2),
+            transparent 60%
+        ),
         linear-gradient(135deg, #0a1e3a, #0b2447 45%, #062a45 70%, #083654);
 }
 

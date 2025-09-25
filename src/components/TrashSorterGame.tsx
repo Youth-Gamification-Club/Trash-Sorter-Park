@@ -341,7 +341,10 @@ export default function TrashSorterPark() {
             ) : (
                 <>
                     <div className="fixed top-2.5 right-2.5 bg-white/80 px-8 py-4 rounded-lg shadow-lg text-xl font-bold text-black min-w-[120px]">
-                        Score: <Badge variant="secondary" id="score">{score}</Badge>
+                        Score:{" "}
+                        <Badge variant="secondary" id="score">
+                            {score}
+                        </Badge>
                     </div>
                     <h1 className="mt-2 mb-3 text-center game-title text-5xl sm:text-6xl">
                         Trash Sorter Park

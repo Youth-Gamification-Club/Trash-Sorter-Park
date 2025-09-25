@@ -12,11 +12,16 @@ export default function GameOver({
 }) {
     return (
         <div className="game-over text-center flex flex-col items-center justify-center min-h-screen space-y-12 px-4">
-            <h2 className="text-6xl font-extrabold text-green-600">Well Done!</h2>
+            <h2 className="text-6xl font-extrabold text-green-600">
+                Well Done!
+            </h2>
 
             <div className="space-y-4">
                 <p className="text-3xl font-semibold">
-                    Your Final Score: <Badge variant="secondary" className="text-blue-600">{score}</Badge>
+                    Your Final Score:{" "}
+                    <Badge variant="secondary" className="text-blue-600">
+                        {score}
+                    </Badge>
                 </p>
             </div>
 
