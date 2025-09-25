@@ -1,6 +1,8 @@
 import { useMemo, useRef, useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import toast from "react-hot-toast";
+import GameOver from "./GameOver";
+import type { Material, TrashItem } from "../game/types";
 
 // Asset imports (relative paths so Vite bundles them)
 import plasticBottle from "/images/plastic_bottle.png";
@@ -20,15 +22,7 @@ import glassBinImg from "/images/glass-bin.png";
 import dingMp3 from "/sounds/ding.mp3";
 import oomphMp3 from "/sounds/oomph.mp3";
 
-type Material = "plastic" | "paper" | "metal" | "glass";
-
-type TrashItem = {
-    id: string;
-    type: Material;
-    src: string;
-    alt: string;
-    sorted: boolean;
-};
+// types moved to src/game/types
 
 const materialInfo: Record<Material, [string, string]> = {
     plastic: [
@@ -56,7 +50,7 @@ const binImages: Record<Material, string> = {
     glass: glassBinImg,
 };
 
-export default function TrashSorterGame() {
+export default function TrashSorterPark() {
     const initialItems: TrashItem[] = useMemo(
         () => [
             {
@@ -335,33 +329,14 @@ export default function TrashSorterGame() {
         setInfoByBin({});
     };
 
-    const GameOver = () => (
-        <div className="game-over text-center flex flex-col items-center justify-center min-h-screen space-y-12 px-4">
-            <h2 className="text-6xl font-extrabold text-green-600">
-                Well Done!
-            </h2>
-
-            <div className="space-y-4">
-                <p className="text-3xl font-semibold">
-                    Your Final Score:{" "}
-                    <span className="text-blue-600">{score}</span>
-                </p>
-            </div>
-
-            <button
-                onClick={restartGame}
-                className="inline-flex items-center justify-center px-16 py-8 bg-green-500 text-white rounded-full hover:bg-green-600 text-3xl font-extrabold shadow-2xl transform hover:scale-105 transition-all duration-200 min-w-[320px]"
-            >
-                <span className="mr-3 text-2xl">♻️</span>
-                <span>Play Again</span>
-            </button>
-        </div>
+    const GameOverView = () => (
+        <GameOver score={score} onRestart={restartGame} />
     );
 
     return (
         <div className="trash-sorter-wrapper w-full flex flex-col h-full">
             {gameOver ? (
-                <GameOver />
+                <GameOverView />
             ) : (
                 <>
                     <div className="fixed top-2.5 right-2.5 bg-white/80 px-8 py-4 rounded-lg shadow-lg text-xl font-bold text-black min-w-[120px]">
