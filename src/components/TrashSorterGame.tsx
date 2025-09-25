@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import toast from "react-hot-toast";
+import { Badge } from "@/components/ui/badge";
 import GameOver from "./GameOver";
 import type { Material, TrashItem } from "../game/types";
 
@@ -340,7 +341,7 @@ export default function TrashSorterPark() {
             ) : (
                 <>
                     <div className="fixed top-2.5 right-2.5 bg-white/80 px-8 py-4 rounded-lg shadow-lg text-xl font-bold text-black min-w-[120px]">
-                        Score: <span id="score">{score}</span>
+                        Score: <Badge variant="secondary" id="score">{score}</Badge>
                     </div>
                     <h1 className="mt-2 mb-3 text-center game-title text-5xl sm:text-6xl">
                         Trash Sorter Park

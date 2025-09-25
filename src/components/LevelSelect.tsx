@@ -1,3 +1,7 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
 type Level = {
     id: "park" | "ocean" | "reef";
     title: string;
@@ -45,50 +49,51 @@ export default function LevelSelect({
             <main className="w-full max-w-6xl px-6 sm:px-10 pb-16">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mt-8">
                     {levels.map((lvl) => (
-                        <button
+                        <Card
                             key={lvl.id}
-                            onClick={() => onSelect(lvl.id)}
                             className={`group relative rounded-2xl p-6 text-left backdrop-blur-xl border transition-all duration-200 overflow-hidden ${
                                 lvl.status === "playable"
                                     ? "bg-white/10 border-cyan-400/30 hover:scale-[1.02] hover:shadow-[0_10px_40px_-10px_rgba(34,211,238,0.45)]"
                                     : "bg-white/5 border-white/10 opacity-80 cursor-pointer hover:scale-[1.01]"
                             }`}
-                            aria-label={`${lvl.title} ${lvl.status === "coming-soon" ? "(Coming soon)" : ""}`}
+                            onClick={lvl.status === "coming-soon" ? () => onSelect(lvl.id) : undefined}
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 via-transparent to-blue-600/10 pointer-events-none" />
-                            <div className="relative">
+                            <CardHeader className="relative p-0">
                                 <div className="flex items-center gap-3">
-                                    <h3 className="text-2xl font-bold text-blue-50">
+                                    <CardTitle className="text-2xl font-bold text-blue-50">
                                         {lvl.title}
-                                    </h3>
+                                    </CardTitle>
                                     {lvl.status === "playable" ? (
-                                        <span className="text-xs font-semibold uppercase bg-cyan-400/20 border border-cyan-300/40 text-cyan-100 px-2 py-1 rounded-full">
+                                        <Badge variant="secondary" className="text-xs font-semibold uppercase bg-cyan-400/20 border border-cyan-300/40 text-cyan-100">
                                             Level 1
-                                        </span>
+                                        </Badge>
                                     ) : (
-                                        <span className="text-xs font-semibold uppercase bg-white/10 border border-white/20 text-blue-200 px-2 py-1 rounded-full">
+                                        <Badge variant="outline" className="text-xs font-semibold uppercase bg-white/10 border border-white/20 text-blue-200">
                                             Coming Soon
-                                        </span>
+                                        </Badge>
                                     )}
                                 </div>
-                                <p className="mt-3 text-blue-200/90 leading-relaxed">
+                            </CardHeader>
+                            <CardContent className="relative p-0 mt-3">
+                                <p className="text-blue-200/90 leading-relaxed">
                                     {lvl.description}
                                 </p>
                                 <div className="mt-6">
-                                    <span
+                                    <Button
+                                        onClick={lvl.status === "playable" ? () => onSelect(lvl.id) : undefined}
+                                        variant={lvl.status === "playable" ? "default" : "secondary"}
                                         className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition ${
                                             lvl.status === "playable"
-                                                ? "bg-cyan-400 text-blue-950 group-hover:bg-cyan-300"
+                                                ? "bg-cyan-400 text-blue-950 hover:bg-cyan-300"
                                                 : "bg-white/10 text-blue-200"
                                         }`}
                                     >
-                                        {lvl.status === "playable"
-                                            ? "Play"
-                                            : "Preview"}
-                                    </span>
+                                        {lvl.status === "playable" ? "Play" : "Preview"}
+                                    </Button>
                                 </div>
-                            </div>
-                        </button>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             </main>

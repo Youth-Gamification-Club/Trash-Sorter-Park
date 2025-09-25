@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 export default function PlaceholderLevel({
     title,
     onBack,
@@ -15,12 +17,12 @@ export default function PlaceholderLevel({
                     This mission is under construction. Check back soon and keep the planet shining in the meantime.
                 </p>
 
-                <button
+                <Button
                     onClick={onBack}
                     className="mt-8 inline-flex items-center justify-center px-6 py-3 rounded-full font-bold bg-cyan-400 text-blue-950 hover:bg-cyan-300 transition"
                 >
                     Back to Levels
-                </button>
+                </Button>
             </div>
         </div>
     );
