@@ -258,7 +258,7 @@ export default function TrashSorterPark() {
         onDropCorrect: (droppedId: string) => void;
         onDropWrong: () => void;
     }) {
-        const [{ isOver, draggedItem }, dropRef] = useDrop(() => ({
+        const [, dropRef] = useDrop(() => ({
             accept: ["plastic", "paper", "metal", "glass"],
             drop: (dropped: { id: string; type: Material }) => {
                 if (dropped.type === mat) onDropCorrect(dropped.id);
@@ -271,9 +271,6 @@ export default function TrashSorterPark() {
             }),
         }));
 
-        const isCorrectBin = isOver && draggedItem && draggedItem.type === mat;
-        const isWrongBin = isOver && draggedItem && draggedItem.type !== mat;
-
         return (
             <div
                 ref={dropRef as unknown as React.Ref<HTMLDivElement>}
@@ -285,14 +282,6 @@ export default function TrashSorterPark() {
                 } ${
                     binGlow[mat] === "error"
                         ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500"
-                        : ""
-                } ${
-                    isCorrectBin
-                        ? "shadow-[0_0_20px_5px_rgba(0,107,0,1)] border-[3px] border-green-500 scale-105"
-                        : ""
-                } ${
-                    isWrongBin
-                        ? "shadow-[0_0_20px_5px_rgba(220,53,69,0.7)] border-[3px] border-red-500 scale-105"
                         : ""
                 }`}
             >
